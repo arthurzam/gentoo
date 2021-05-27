@@ -1,0 +1,50 @@
+From e78da0f4eb970fd323809a180c04088208bdde08 Mon Sep 17 00:00:00 2001
+From: pgajdos <pgajdos@suse.cz>
+Date: Mon, 1 Jun 2020 14:01:10 +0200
+Subject: [PATCH 1/2] do not require unittest2 when not neccessary
+
+---
+ tests/test_deprecation.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/tests/test_deprecation.py b/tests/test_deprecation.py
+index 0fd29b3..230056e 100644
+--- a/tests/test_deprecation.py
++++ b/tests/test_deprecation.py
+@@ -12,14 +12,16 @@
+ 
+ # As we unfortunately support Python 2.7, it lacks TestCase.subTest which
+ # is in 3.4+ or in unittest2
+-import unittest2
++import unittest
++if not hasattr(unittest.TestCase, "subTest"):
++    import unittest2 as unittest
+ import warnings
+ 
+ import deprecation
+ from datetime import date
+ 
+ 
+-class Test_deprecated(unittest2.TestCase):
++class Test_deprecated(unittest.TestCase):
+ 
+     def test_args_set_on_base_class(self):
+         args = (1, 2, 3, 4)
+@@ -230,7 +232,7 @@ def method(self):
+             self.assertEqual(sot.method(), ret_val)
+ 
+ 
+-class Test_fail_if_not_removed(unittest2.TestCase):
++class Test_fail_if_not_removed(unittest.TestCase):
+ 
+     @deprecation.deprecated(deprecated_in="1.0", current_version="2.0")
+     def _deprecated_method(self):
+@@ -259,7 +261,7 @@ def fn():
+         except AssertionError:
+             self.fail("A DeprecatedWarning shouldn't cause a failure")
+ 
+-    @unittest2.expectedFailure
++    @unittest.expectedFailure
+     @deprecation.fail_if_not_removed
+     def test_literal_UnsupportedWarning(self):
+         self._unsupported_method()
