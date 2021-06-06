@@ -13,7 +13,7 @@ HOMEPAGE="https://github.com/ifduyue/python-xxhash
 SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 LICENSE="MIT"
 
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 SLOT="0"
 
 RDEPEND=">=dev-libs/xxhash-0.8.0"
